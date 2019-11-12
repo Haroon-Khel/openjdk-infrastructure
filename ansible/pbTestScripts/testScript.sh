@@ -170,8 +170,6 @@ startVMPlaybook()
 startVMPlaybookWin()
 {
 	local OS=$1
-	# The number of bytes the disk should be (this is 95GB in bytes)
-	local diskSizeBoundary=102005473280;
 	if [ "$branchName" == "" ]; then
 		cd $WORKSPACE/adoptopenjdkPBTests/$folderName-master/ansible
 		branchName="master"
@@ -180,24 +178,33 @@ startVMPlaybookWin()
 	fi
 	ln -sf Vagrantfile.$OS Vagrantfile
 	vagrant up
+	cat playbooks/AdoptOpenJDK_Windows_Playbook/hosts.tmp | tr -d \\r | sort -nr | head -1 > playbooks/AdoptOpenJDK_Windows_Playbook/hosts.win
+	echo "This is the content of hosts.win : " && cat playbooks/AdoptOpenJDK_Windows_Playbook/hosts.win
 	# Changes the value of "hosts" in main.yml
 	sed -i'' -e "s/.*hosts:.*/- hosts: all/g" playbooks/AdoptOpenJDK_Windows_Playbook/main.yml
 	# Uncomments and sets the ansible_password to 'vagrant', in adoptopenjdk_variables.yml
 	sed -i'' -e "s/.*ansible_password.*/ansible_password: vagrant/g" playbooks/AdoptOpenJDK_Windows_Playbook/group_vars/all/adoptopenjdk_variables.yml
-	# if "credssp" isn't found in adoptopenjdk_variables.yml
+	# If "credssp" isn't found in adoptopenjdk_variables.yml
 	if ! grep -q "credssp" playbooks/AdoptOpenJDK_Windows_Playbook/group_vars/all/adoptopenjdk_variables.yml;
 	then
 		# Add the "ansible_winrm_transport" to adoptopenjdk_variables.yml
 		echo -e "\nansible_winrm_transport: credssp" >> playbooks/AdoptOpenJDK_Windows_Playbook/group_vars/all/adoptopenjdk_variables.yml
 	fi
-	# getting the current c drive information and cutting it down to the number of GB it is.
-	export currentDiskSize=$(vagrant powershell -c "Start-Process powershell -Verb runAs; Get-Partition -Driveletter c | select Size" | grep -E -o '[0-9]{5,}')
-	if [[ $currentDiskSize -lt $diskSizeBoundary ]]; then
-		echo "Resizing C Drive"
-		vagrant powershell -c "Start-Process powershell -Verb runAs; \$size = (Get-PartitionSupportedSize -DriveLetter c); Resize-Partition -DriveLetter c -Size \$size.SizeMax"
+	# Run the ansible playbook on the VM & logs the output.
+	ansible-playbook -i playbooks/AdoptOpenJDK_Windows_Playbook/hosts.win -u vagrant --skip-tags jenkins,adoptopenjdk,build playbooks/AdoptOpenJDK_Windows_Playbook/main.yml 2>&1 | tee $WORKSPACE/adoptopenjdkPBTests/logFiles/$folderName.$branchName.$OS.log
+	if [[ "$testNativeBuild" = true ]]; then
+		echo "Building a JDK"
+		# Runs the build script via ansible, as vagrant powershell gives error messages that ansible doesn't. 
+        	# See: https://github.com/AdoptOpenJDK/openjdk-infrastructure/pull/942#issuecomment-539946564
+        	cd $WORKSPACE/adoptopenjdkPBTests/$folderName-$branchName/ansible
+		ansible all -i playbooks/AdoptOpenJDK_Windows_Playbook/hosts.win -u vagrant -m raw -a "Start-Process powershell.exe -Verb runAs; cd C:/; sh C:/vagrant/pbTestScripts/buildJDKWin.sh"
+		if [[ "$runTest" = true ]]; then
+			echo "Running test against the built JDK"
+			# Runs a script on the VM to test the built JDK
+			ansible all -i playbooks/AdoptOpenJDK_Windows_Playbook/hosts.win -u vagrant -m raw -a "sh C:/vagrant/pbTestScripts/testJDKWin.sh"
+		fi
 	fi
-	# run the ansible playbook on the VM & logs the output.
-	ansible-playbook -i playbooks/AdoptOpenJDK_Windows_Playbook/hosts.win -u vagrant --skip-tags jenkins,adoptopenjdk playbooks/AdoptOpenJDK_Windows_Playbook/main.yml 2>&1 | tee $WORKSPACE/adoptopenjdkPBTests/logFiles/$folderName.$branchName.$OS.log
+	vagrant halt
 }
 
 destroyVM()
@@ -238,7 +245,7 @@ searchLogFiles()
 # Takes in the URL passed to the script, and extracts the folder name, branch name and builds the gitURL to be used later on.
 splitURL()
 {
-	#IFS stands for Internal Field Seperator and determines the delimiter for splitting.
+	# IFS stands for Internal Field Seperator and determines the delimiter for splitting.
 	IFS='/' read -r -a array <<< "$gitURL"
 	if [ ${array[@]: -2:1} == 'tree' ]
 	then
