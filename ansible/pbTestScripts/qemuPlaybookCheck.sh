@@ -281,7 +281,7 @@ runPlaybook() {
 	if [[ "$buildJDK" == true ]]; then
 		local buildLogPath="$workFolder/logFiles/$OS.$ARCHITECTURE.build_log"
 		
-		ssh linux@localhost -p "$PORTNO" -i "$workFolder"/id_rsa "git clone -b "$gitBranch" "$gitURL" \$HOME/openjdk-infrastructure && \$HOME/openjdk-infrastructure/ansible/pbTestScripts/buildJDK.sh --version $jdkToBuild $buildVariant --URL $buildURL/tree/$buildBranch" 2>&1 | tee "$buildLogPath"
+		ssh linux@localhost -p "$PORTNO" -i "$workFolder"/id_rsa "git clone -b "$gitBranch" "$gitURL" \$HOME/openjdk-infrastructure && \$HOME/openjdk-infrastructure/ansible/pbTestScripts/buildJDK.sh --version -c $jdkToBuild $buildVariant --URL $buildURL/tree/$buildBranch" 2>&1 | tee "$buildLogPath"
 		if grep -q '] Error' "$buildLogPath" || grep -q 'configure: error' "$buildLogPath"; then
 			echo BUILD FAILED
 			destroyVM
