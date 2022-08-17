@@ -40,7 +40,7 @@ Build_Tool_Packages:
   - openssl-devel
   - perl-devel
   - pkgconfig
-  - systemtap-sdt-devel
+  # - systemtap-sdt-devel
   - unzip
   - wget
   - xz
