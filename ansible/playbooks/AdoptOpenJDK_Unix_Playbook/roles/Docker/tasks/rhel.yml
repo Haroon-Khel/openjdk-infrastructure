@@ -38,7 +38,7 @@
   yum_repository:
     name: docker
     description: docker YUM repo s390x
-    baseurl: https://download.docker.com/linux/rhel/docker-ce.repo
+    baseurl: https://download.docker.com/linux/rhel/7/stable/
     enabled: true
     gpgcheck: false
   when:
