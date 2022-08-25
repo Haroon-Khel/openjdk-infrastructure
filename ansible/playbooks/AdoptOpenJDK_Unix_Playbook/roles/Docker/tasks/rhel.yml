@@ -21,6 +21,7 @@
     gpgcheck: false
   when:
     - ansible_architecture == "x86_64"
+    - ansible_architecture == "s390x"
 
 ############special handle for architecture###################
 - name: Add Docker repo for ppc64le on RHEL7/Centos7
@@ -34,20 +35,20 @@
     - ansible_architecture == "ppc64le"
     - ansible_distribution_major_version == "7"
 
-- name: Add Docker repo for s390x on RHEL
-  yum_repository:
-    name: docker
-    description: docker YUM repo s390x
-    baseurl: https://download.docker.com/linux/rhel/{{ ansible_distribution_major_version }}/s390x/stable/
-    enabled: true
-    gpgcheck: false
-  when:
-    - ansible_architecture == "s390x"
+# - name: Add Docker repo for s390x on RHEL
+#   yum_repository:
+#     name: docker
+#     description: docker YUM repo s390x
+#     baseurl: https://download.docker.com/linux/rhel/{{ ansible_distribution_major_version }}/s390x/stable/
+#     enabled: true
+#     gpgcheck: false
+#   when:
+#     - ansible_architecture == "s390x"
 
-- name: Import Docker repo key for s390x on RHEL7
-  rpm_key:
-    key: https://download.docker.com/linux/rhel/gpg
-    state: present
-  when:
-    - ansible_architecture == "s390x"
-    - ansible_distribution_major_version == "7"
+# - name: Import Docker repo key for s390x on RHEL7
+#   rpm_key:
+#     key: https://download.docker.com/linux/rhel/gpg
+#     state: present
+#   when:
+#     - ansible_architecture == "s390x"
+#     - ansible_distribution_major_version == "7"
