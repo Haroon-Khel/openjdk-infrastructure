@@ -20,8 +20,7 @@
     enabled: true
     gpgcheck: false
   when:
-    - ansible_architecture == "x86_64"
-    - ansible_architecture == "s390x"
+    - ansible_architecture == "x86_64" or ansible_architecture == "s390x"
 
 ############special handle for architecture###################
 - name: Add Docker repo for ppc64le on RHEL7/Centos7
