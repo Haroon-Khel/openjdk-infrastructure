@@ -43,7 +43,7 @@ Additional_Build_Tools_SLES15:
 
 Additional_Build_Tools_SLES12:
   - java-1_8_0-openjdk
-  - git-core
+  # - git-core
   - libelf0
   - libfreetype6
   - libXext6
