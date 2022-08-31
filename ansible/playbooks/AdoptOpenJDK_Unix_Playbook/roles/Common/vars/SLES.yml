@@ -22,7 +22,6 @@ Build_Tool_Packages:
   - wget
   - zip
   - tar
-  - gtar
 
 Additional_Build_Tools_SLES15:
   - alsa-devel
