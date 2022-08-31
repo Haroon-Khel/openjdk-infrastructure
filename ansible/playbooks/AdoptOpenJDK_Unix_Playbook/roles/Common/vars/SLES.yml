@@ -21,6 +21,7 @@ Build_Tool_Packages:
   - unzip
   - wget
   - zip
+  - tar
 
 Additional_Build_Tools_SLES15:
   - alsa-devel
