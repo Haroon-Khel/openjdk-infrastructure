@@ -6,6 +6,7 @@
 # Command Build Tool Packages
 Build_Tool_Packages:
   - bind-utils
+  - bzip2
   - bison                         # OpenJ9
   - cpio
   - curl
