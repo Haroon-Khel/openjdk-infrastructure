@@ -82,6 +82,7 @@ def dockerBuild(architecture, distro, dockerfile) {
         "--build-arg git_sha=$git_sha -f ansible/docker/$dockerfile .")
     // dockerhub is the ID of the credentials stored in Jenkins 
     docker.withRegistry('https://index.docker.io/v1/', 'dockerhub') {
+        dockerImage.tag('adoptopenjdk/centos6_build_image:latest')
         dockerImage.push()
     }
 }
