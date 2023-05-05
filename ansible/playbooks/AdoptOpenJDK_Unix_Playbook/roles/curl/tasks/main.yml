@@ -120,13 +120,25 @@
     - ((not curl_version.stdout) or ((curl_version.stdout) and (curl_version.stdout is version_compare(curl_oldest, operator='lt', strict=True))))
   tags: curl
 
-- name: Find install directory MacOS
+- name: Find install directory MacOS (x64)
   shell: ls -la /usr/local/Cellar/curl/8.*/bin/curl | awk '{print $9}'
   register: curl_install_dir
   changed_when: false
   when:
     - ansible_distribution == "MacOSX"
+    - ansible_architecture == "x86_64"
     - "macos_version_number is version('10.13', '>')"
+    - ((not curl_version.stdout) or ((curl_version.stdout) and (curl_version.stdout is version_compare(curl_oldest, operator='lt', strict=True))))
+  tags: curl
+
+- name: Find install directory MacOS (arm64)
+  shell: ls -la /opt/homebrew/Cellar/curl/8.*/bin/curl | awk '{print $9}'
+  register: curl_install_dir
+  changed_when: false
+  when:
+    - ansible_distribution == "MacOSX"
+    - ansible_architecture == "arm64"
+    - ((not curl_version.stdout) or ((curl_version.stdout) and (curl_version.stdout is version_compare(curl_oldest, operator='lt', strict=True))))
   tags: curl
 
 - name: Create /usr/local/bin/curl symlink MacOS
