@@ -121,7 +121,7 @@
   tags: curl
 
 - name: Find install directory MacOS
-  shell: ls -la /usr/local/Cellar/curl/7.*/bin/curl | awk '{print $9}'
+  shell: ls -la /usr/local/Cellar/curl/8.*/bin/curl | awk '{print $9}'
   register: curl_install_dir
   changed_when: false
   when:
