@@ -107,7 +107,7 @@
     msg: "{{ role_path }}"
 
 - name: Copy Get Container Health Plugin
-  copy:
+  ansible.builtin.copy:
     src: "{{ role_path }}/tasks/additional_plugins/check_container_spaces.sh"
     dest: /usr/local/nagios/libexec/check_container_spaces.sh
     mode: 0755
