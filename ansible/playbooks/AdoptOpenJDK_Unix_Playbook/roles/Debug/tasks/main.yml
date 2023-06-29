@@ -5,6 +5,7 @@
 - name: Display Debug Information
   debug:
     msg:
+      - "ansible_remote_tmp: {{ ansible_remote_tmp }}"
       - "inventory_hostname: {{ inventory_hostname | default('***Undefined***') }} "
       - "ansible_hostname: {{ ansible_hostname | default('***Undefined***') }}"
       - "ansible_fqdn: {{ ansible_fqdn | default('***Undefined***') }}"

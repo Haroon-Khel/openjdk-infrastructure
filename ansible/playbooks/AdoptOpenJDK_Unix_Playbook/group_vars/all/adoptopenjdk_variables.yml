@@ -23,6 +23,9 @@ Nagios_Master_IP: 78.47.239.96
 # Security Variables:
 Security: Enabled
 
+# Ansible temp directory for Solaris
+ansible_remote_tmp: "{{ '/.ansible/tmp/' if ansible_distribution == 'Solaris' }}"
+
 # JCK Variables:
 jckftp_Username: jckftp
 
