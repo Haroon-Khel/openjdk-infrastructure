@@ -111,4 +111,4 @@
     src: "{{ role_path }}/tasks/additional_plugins/check_container_spaces.sh"
     dest: /usr/local/nagios/libexec/check_container_spaces.sh
     mode: 0755
-    remote_src: no
+    remote_src: false
