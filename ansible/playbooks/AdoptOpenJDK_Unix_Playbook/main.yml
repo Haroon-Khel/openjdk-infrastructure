@@ -16,6 +16,7 @@
           include_vars: group_vars/all/adoptopenjdk_variables.yml
   environment:
     PATH: "/opt/csw/bin/:/usr/local/bin:/opt/homebrew/bin:{{ ansible_env.PATH }}"
+    ansible_remote_tmp: "{{ '/.ansible/tmp/' if ansible_distribution == 'Solaris' }}"
 
   #########
   # Roles #
