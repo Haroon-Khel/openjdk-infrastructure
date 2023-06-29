@@ -112,3 +112,5 @@
     dest: /usr/local/nagios/libexec/check_container_spaces.sh
     mode: 0755
     remote_src: false
+  environment:
+    HOME: /root
