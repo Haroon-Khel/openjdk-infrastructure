@@ -19,6 +19,7 @@
     state: installed
     update_cache: yes
     validate_certs: true
+    use_backend: auto
   when: ansible_distribution_major_version != "8"
   tags: patch_update
 
@@ -52,6 +53,7 @@
   yum:
     name: '*'
     state: latest
+    use_backend: auto
   tags: patch_update
 
 ############################
