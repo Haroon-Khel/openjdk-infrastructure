@@ -14,7 +14,7 @@
   tags: build_tools
 
 - name: Enable EPEL release (not CentOS8)
-  dnf:
+  yumf:
     name: epel-release
     state: installed
     update_cache: yes
@@ -52,7 +52,6 @@
   yum:
     name: '*'
     state: latest
-    use_backend: yum
   tags: patch_update
 
 ############################
