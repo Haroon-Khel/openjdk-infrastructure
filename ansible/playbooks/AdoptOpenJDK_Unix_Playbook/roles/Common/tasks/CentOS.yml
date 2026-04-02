@@ -19,7 +19,6 @@
     state: installed
     update_cache: yes
     validate_certs: true
-    use_backend: yum
   when: ansible_distribution_major_version != "8"
   tags: patch_update
 
